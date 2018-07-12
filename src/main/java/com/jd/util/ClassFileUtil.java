@@ -50,7 +50,8 @@ public class ClassFileUtil {
 			String internalClassName = ((ConstantUtf8) c).bytes;
 			String pathSuffix = internalClassName.replace(StringConstants.INTERNAL_PACKAGE_SEPARATOR,
 					File.separatorChar) + StringConstants.CLASS_FILE_SUFFIX;
-
+			System.out.println(pathSuffix);
+			System.out.println(pathToClass);
 			int index = pathToClass.indexOf(pathSuffix);
 
 			if (index < 0)

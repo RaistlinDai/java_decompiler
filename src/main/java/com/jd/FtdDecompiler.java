@@ -8,6 +8,7 @@ import main.java.com.jd.util.ClassFileUtil;
 import jd.core.Decompiler;
 import jd.core.process.DecompilerImpl;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.PrintStream;
 
 
@@ -28,7 +29,7 @@ public class FtdDecompiler {
 		} else {			
 			try {
 				String pathToClass = args[0].replace('/', File.separatorChar).replace('\\', File.separatorChar);
-				System.out.println(pathToClass);
+				
 				String directoryPath = ClassFileUtil.ExtractDirectoryPath(pathToClass);
 				
 				if (directoryPath == null)
