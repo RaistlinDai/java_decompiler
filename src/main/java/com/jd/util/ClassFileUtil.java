@@ -15,19 +15,20 @@ public class ClassFileUtil {
 	}
 
 	/*
-	 * Lecture rapide de la structure de la classe et extraction du nom du
-	 * repoertoire de base.
+	 * rapid reading of the structure of the class and the name of the basic root directory extraction.
 	 */
 	public static String ExtractDirectoryPath(String pathToClass) throws Exception {
 		DataInputStream dis = null;
 		String directoryPath = null;
 
 		try {
+			/* verify java class */
 			dis = new DataInputStream(new BufferedInputStream(new FileInputStream(pathToClass)));
 			int magic = dis.readInt();
 			if (magic != CoreConstants.JAVA_MAGIC_NUMBER)
 				throw new ClassFormatException("Invalid Java .class file");
-
+			
+			/* ===================== File stream extract start ====================== */
 			/* int minor_version = */
 			dis.readUnsignedShort();
 			/* int major_version = */
@@ -38,7 +39,7 @@ public class ClassFileUtil {
 			/* int access_flags = */
 			dis.readUnsignedShort();
 			int this_class = dis.readUnsignedShort();
-
+			
 			Constant c = constants[this_class];
 			if ((c == null) || (c.tag != ConstantConstant.CONSTANT_Class))
 				throw new ClassFormatException("Invalid contant pool");
@@ -46,12 +47,14 @@ public class ClassFileUtil {
 			c = constants[((ConstantClass) c).name_index];
 			if ((c == null) || (c.tag != ConstantConstant.CONSTANT_Utf8))
 				throw new ClassFormatException("Invalid contant pool");
-
+			
+			/* get the package.classname */
 			String internalClassName = ((ConstantUtf8) c).bytes;
+			/* ===================== File stream extract end ======================== */
+			
 			String pathSuffix = internalClassName.replace(StringConstants.INTERNAL_PACKAGE_SEPARATOR,
 					File.separatorChar) + StringConstants.CLASS_FILE_SUFFIX;
-			System.out.println(pathSuffix);
-			System.out.println(pathToClass);
+			
 			int index = pathToClass.indexOf(pathSuffix);
 
 			if (index < 0)
