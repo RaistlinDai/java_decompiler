@@ -9,17 +9,25 @@ import jd.core.process.deserializer.ClassFormatException;
 import jd.core.util.StringConstants;
 import main.java.com.jd.util.MessageConstant;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 public class ClassFileUtil {
 
 	private ClassFileUtil() {
 	}
 
-	/*
-	 * rapid reading of the structure of the class and the name of the basic root
-	 * directory extraction.
+	/**
+	 * rapid reading of the structure of the class and the name of the basic root directory extraction.
+	 * @param pathToClass
+	 * @return
+	 * @throws Exception
 	 */
-	public static String ExtractDirectoryPath(String pathToClass) throws Exception {
+	public static String ExtractDirectoryPathFromClassPath(String pathToClass) throws Exception {
 		DataInputStream dis = null;
 		String directoryPath = null;
 
@@ -74,6 +82,12 @@ public class ClassFileUtil {
 		return directoryPath;
 	}
 
+	/**
+	 * 
+	 * @param directoryPath
+	 * @param pathToClass
+	 * @return
+	 */
 	public static String ExtractInternalPath(String directoryPath, String pathToClass) {
 		if ((directoryPath == null) || (pathToClass == null) || !pathToClass.startsWith(directoryPath))
 			return null;
@@ -82,7 +96,44 @@ public class ClassFileUtil {
 
 		return s.replace(File.separatorChar, StringConstants.INTERNAL_PACKAGE_SEPARATOR);
 	}
+	
+	/**
+	 * 
+	 * @param pathToJar
+	 * @return
+	 * @throws Exception
+	 */
+	public static Map<String, String> ExtractDirectoryPathFromJarPath(String pathToJar) throws Exception {
+		ZipInputStream zipstr = new ZipInputStream(new FileInputStream(pathToJar)); 
+		ZipEntry ze; 
+		
+		Map<String, String> pathToSrc = new HashMap<String, String>();
+		while ((ze = zipstr.getNextEntry()) != null ) {
+			String entryName = ze.getName();
+			if (entryName.endsWith(".class")) {
+				String classPath = entryName.replaceAll("\\$.*\\.class$", ".class");
+				
+				if (!pathToSrc.containsKey(classPath)) { 
+					pathToSrc.put(classPath, classPath); 
+				} 
+			}
+		}
+		
+		return pathToSrc;
+	}
 
+	/**
+	 * 
+	 * @param directory
+	 */
+	public static void VerifyAndCreateDirectory(String directory) {
+		File dir = new File(directory);
+		
+		if (!dir.exists() || !dir.isDirectory()) {
+			dir.mkdirs();
+		}
+	}
+	
 	private static Constant[] DeserializeConstants(DataInputStream dis) throws IOException {
 		int count = dis.readUnsignedShort();
 		if (count == 0)
@@ -132,4 +183,5 @@ public class ClassFileUtil {
 		return constants;
 	}
 
+	
 }
