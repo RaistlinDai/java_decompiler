@@ -9,19 +9,15 @@ public class CommonPreferences extends Preferences {
 	protected boolean unicodeEscape;
 	protected boolean showLineNumbers;
 
-	public  CommonPreferences()
-	{ 
-		this.showPrefixThis = true; 
-		this.mergeEmptyLines = false; 
-		this.unicodeEscape = false; 
+	public CommonPreferences() {
+		this.showPrefixThis = true;
+		this.mergeEmptyLines = false;
+		this.unicodeEscape = false;
 		this.showLineNumbers = true;
 	}
 
-	public  CommonPreferences(
-			boolean showDefaultConstructor, boolean realignmentLineNumber, 
-			boolean showPrefixThis, boolean mergeEmptyLines, 
-			boolean unicodeEscape, boolean showLineNumbers) 
-	{
+	public CommonPreferences(boolean showDefaultConstructor, boolean realignmentLineNumber, boolean showPrefixThis,
+			boolean mergeEmptyLines, boolean unicodeEscape, boolean showLineNumbers) {
 		super(showDefaultConstructor, realignmentLineNumber);
 		this.showPrefixThis = showPrefixThis;
 		this.mergeEmptyLines = mergeEmptyLines;
@@ -29,9 +25,20 @@ public class CommonPreferences extends Preferences {
 		this.showLineNumbers = showLineNumbers;
 	}
 
-	public  boolean isShowPrefixThis() { return showPrefixThis; }
-	public  boolean isMergeEmptyLines() { return mergeEmptyLines; }
-	public  boolean isUnicodeEscape() { return unicodeEscape; }
-	public  boolean isShowLineNumbers() { return showLineNumbers; }
-	
+	public boolean isShowPrefixThis() {
+		return showPrefixThis;
+	}
+
+	public boolean isMergeEmptyLines() {
+		return mergeEmptyLines;
+	}
+
+	public boolean isUnicodeEscape() {
+		return unicodeEscape;
+	}
+
+	public boolean isShowLineNumbers() {
+		return showLineNumbers;
+	}
+
 }

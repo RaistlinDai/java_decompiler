@@ -8,52 +8,40 @@ import java.io.IOException;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
-public class JarLoader extends BaseLoader{
+public class JarLoader extends BaseLoader {
 
-private ZipFile zipFile;
-	
-	public JarLoader(File file) throws LoaderException
-	{	
+	private ZipFile zipFile;
+
+	public JarLoader(File file) throws LoaderException {
 		super(file);
-		
-		if (! (file.exists() && file.isFile()))
-		{
-			throw new LoaderException("'" + codebase + "' is not a directory");			
+
+		if (!(file.exists() && file.isFile())) {
+			throw new LoaderException("'" + codebase + "' is not a directory");
 		}
-		
-		try 
-		{
+
+		try {
 			this.zipFile = new ZipFile(codebase);
-		}
-		catch (IOException e) 
-		{
+		} catch (IOException e) {
 			throw new LoaderException("Error reading from '" + codebase + "'");
 		}
 	}
-	
-	public  DataInputStream load(String internalPath)
-		throws LoaderException
-	{
+
+	public DataInputStream load(String internalPath) throws LoaderException {
 		ZipEntry zipEntry = this.zipFile.getEntry(internalPath);
-		
-		if (zipEntry == null)
-		{
+
+		if (zipEntry == null) {
 			throw new LoaderException("Can not read '" + internalPath + "'");
 		}
-		
-		try 
-		{
+
+		try {
 			return new DataInputStream(this.zipFile.getInputStream(zipEntry));
-		} 
-		catch (IOException e) 
-		{
+		} catch (IOException e) {
 			throw new LoaderException("Error reading '" + internalPath + "'");
 		}
 	}
 
-	public  boolean canLoad(String internalPath) 
-	{
+	public boolean canLoad(String internalPath) {
 		return this.zipFile.getEntry(internalPath) != null;
 	}
-	
+
 }
